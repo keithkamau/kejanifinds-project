@@ -1,0 +1,191 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+*:not(dialog) {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+/* Global Styles 
+- Primary: Deep Indigo #1A2A4F (Headers, footers, buttons) 
+- Secondary: Soft Sky Blue #5B8FB9 (Links, secondary CTAs, icons) 
+- Accent: Warm Sand #E9C46A (Alerts, sale badges, hover states) 
+- Background: Off-White #F8F9FA+Pure White #FFFFFF
+- Text: Charcoal #2C3E50 (body) & Slate #95A5A6 (labels)
+*/
+
+.navbar {
+  background-color: #1A2A4F;
+  color: #FFFFFF;
+  padding: 1rem;
+}
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbar-container img {
+  max-width: 100%;
+  height: 5rem;
+  cursor: pointer;
+}
+.navbar-container ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  justify-content: flex-end;
+}
+.navbar-container ul li a {
+  color: #FFFFFF;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  text-decoration: none;
+  margin-right: 1rem;
+  transition: all 0.2s ease-in;
+}
+.navbar-container ul li a:hover {
+  color: #E9C46A;
+  border-bottom: 1px solid #E9C46A;
+}
+.nav-logins {
+  display: flex;
+  align-items: center;
+}
+.nav-logins a {
+  color: #FFFFFF;
+  padding: 0.5rem;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.login-button {
+  background-color: transparent;
+  border: 1px solid #FFFFFF;
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: all 0.2s ease-in;
+}
+.login-button:hover {
+  color: #1A2A4F;
+  background-color: #E9C46A;
+  border-color: #E9C46A;
+}
+.signup-button {
+  background-color: #E9C46A;
+  color: #1a2a4f;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: all 0.2s ease-in;
+}
+.signup-button:hover {
+  background-color: #D4A44B;
+  color: #1A2A4F;
+}
+.hero {
+  background-image: url('../images/city-skyline.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 80vh;
+  padding: 4rem 6rem;
+}
+.hero-content {
+  max-width: 800px;
+  color: #FFFFFF;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  padding: 2rem;
+  border-radius: 8px;
+}
+.hero-content h1 {
+  font-family: 'Playfair', serif;
+  font-size: 6rem;
+  margin-bottom: 1rem;
+}
+.hero-content h1 span {
+  color: #E9C46A;
+}
+.hero-content p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+.cta-button {
+  background-color: #E9C46A;
+  color: #1A2A4F;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in;
+}
+.cta-button:hover {
+  background-color: #D4A44B;
+}
+.featured-finds {
+  padding: 4rem 6rem;
+}
+.featured-finds h2 {
+  font-family: 'Playfair', serif;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.finds-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.find-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E9C46A;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 1rem;
+  width: 300px;
+  transition: transform 0.2s ease-in;
+}
+.find-card:hover {
+  transform: translateY(-5px);
+}
+.find-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+}
+.find-card h3 {
+  font-family: 'Playfair', serif;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.find-card p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #2C3E50;
+  margin-bottom: 1rem;
+}
+.find-card a {
+  color: #E9C46A;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s ease-in;
+}
+.find-card a:hover {
+  color: #D4A44B;
+}
