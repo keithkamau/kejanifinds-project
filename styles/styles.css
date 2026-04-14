@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: space-between;
 }
-.navbar-container img {
+.navbar-container img, .footer-logo img {
   max-width: 100%;
   height: 5rem;
   cursor: pointer;
@@ -188,4 +188,107 @@
 }
 .find-card a:hover {
   color: #D4A44B;
+}
+.view-all-button {
+  display: block;
+  margin: 2rem auto;
+  background-color: #E9C46A;
+  border: 1px solid #E9C46A;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: #1A2A4F;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 4px;
+  transition: all 0.2s ease-in;
+}
+.view-all-button:hover {
+  background-color: #E9C46A;
+  color: #FFFFFF;
+}
+.why-choose-us {
+  background-color: #F8F9FA;
+  padding: 4rem 6rem;
+}
+.why-choose-us h2 {
+  font-family: 'Playfair', serif;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.reasons-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.reason-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E9C46A;
+  border-radius: 8px;
+  padding: 2rem;
+  width: 300px;
+  text-align: center;
+  transition: transform 0.2s ease-in;
+}
+.reason-card img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}
+.reason-card h3 {
+  font-family: 'Playfair', serif;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.reason-card p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #2C3E50;
+}
+.footer {
+  background-color: #1A2A4F;
+  color: #FFFFFF;
+  padding: 2rem 6rem;
+}
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 1rem auto;
+}
+.footer-logo img {
+  height: 4rem;
+}
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 1rem auto;
+}
+.footer-links a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s ease-in;
+}
+.footer-links a:hover {
+  color: #E9C46A;
+}
+.contact-icon {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  height: 3rem;
+  align-items: center;
+  transition: transform 0.2s ease-in;
+}
+.contact-icon:hover {
+  transform: scale(1.1);
+}
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
