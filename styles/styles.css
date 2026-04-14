@@ -156,6 +156,7 @@
   overflow: hidden;
   padding: 1rem;
   width: 300px;
+  text-align: center;
   transition: transform 0.2s ease-in;
 }
 .find-card:hover {
@@ -290,5 +291,5 @@
 .footer-contact {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.5rem;
 }
