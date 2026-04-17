@@ -1,0 +1,1 @@
+// Auth0 API, Numverify API,Nominatim API, Open-Meteo API, Whatsapp
