@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/form-style.css">
+  <title>New Listing - KejaniFinds</title>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo-container">
+        <img src="images/kejani-logo.png" alt="KejaniFinds Logo" class="logo">
+      </div>
+    <div class="nav-logins">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="listings.html">Listings</a></li>
+        <li><a href="saved-listings.html">My Saved</a></li>
+      </ul>
+      <a href="login.html" class="post-listing-button">Post a listing</a>
+    </div>
+  </nav>
+
+  <div class="form-heading">
+    <h3>Post a listing</h3>
+    <p>Fill in your property details — takes about 5 minutes</p>
+  </div>
+  <form id="listing-form">
+
+    <fieldset>
+      <legend>Property details</legend>
+
+      <div class="form-group">
+        <label for="input-title">Listing title</label>
+        <input type="text" id="input-title" name="title"
+          placeholder="e.g. 2 bedroom apartment in Kilimani" required />
+      </div>
+
+      <div class="form-group">
+        <label for="input-type">Property type</label>
+        <select id="input-type" name="property_type" required>
+          <option value="">Select type</option>
+          <option value="bedsitter">Bedsitter</option>
+          <option value="1br">1 bedroom</option>
+          <option value="2br">2 bedrooms</option>
+          <option value="3br">3 bedrooms</option>
+          <option value="4br">4 bedrooms</option>
+          <option value="maisonette">Maisonette</option>
+          <option value="bungalow">Bungalow</option>
+          <option value="townhouse">Townhouse</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="input-bedrooms">Bedrooms</label>
+          <input type="number" id="input-bedrooms" name="bedrooms"
+            min="0" max="20" placeholder="e.g. 2" />
+        </div>
+        <div class="form-group">
+          <label for="input-bathrooms">Bathrooms</label>
+          <input type="number" id="input-bathrooms" name="bathrooms"
+            min="1" max="10" placeholder="e.g. 1" />
+        </div>
+        <div class="form-group">
+          <label for="input-size">Size (sqm)</label>
+          <input type="number" id="input-size" name="size_sqm"
+            min="10" placeholder="e.g. 85" />
+        </div>
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Location</legend>
+
+      <div class="form-group">
+        <label for="input-street">Street / Road name</label>
+        <input type="text" id="input-street" name="street"
+          placeholder="e.g. Ngong Road" />
+      </div>
+
+      <div class="form-group">
+        <label for="input-estate">Estate <span class="required-mark">*</span></label>
+        <input type="text" id="input-estate" name="estate"
+          placeholder="e.g. Kilimani" autocomplete="off" required />
+        <ul id="estate-suggestions" class="suggestions-list"></ul>
+      </div>
+
+      <div class="form-group">
+        <label for="input-area">Sub-county / Area</label>
+        <input type="text" id="input-area" name="area"
+          placeholder="e.g. Dagoretti North" />
+      </div>
+
+      <div class="form-group">
+        <label for="input-city">City</label>
+        <input type="text" id="input-city" name="city"
+          value="Nairobi" placeholder="e.g. Nairobi" />
+      </div>
+
+      <div id="location-preview" class="location-preview">
+        Start typing your estate name to auto-locate your property.
+      </div>
+
+      <input type="hidden" id="hidden-lat" name="lat" />
+      <input type="hidden" id="hidden-lon" name="lon" />
+      <input type="hidden" id="hidden-display-address" name="display_address" />
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Pricing</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="input-rent">Monthly rent (KES)</label>
+          <input type="number" id="input-rent" name="rent"
+            min="0" placeholder="e.g. 28000" required />
+        </div>
+        <div class="form-group">
+          <label for="input-deposit">Deposit (KES)</label>
+          <input type="number" id="input-deposit" name="deposit"
+            min="0" placeholder="e.g. 56000" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="input-payment-terms">Payment terms</label>
+        <select id="input-payment-terms" name="payment_terms">
+          <option value="monthly">Monthly</option>
+          <option value="quarterly">Quarterly</option>
+          <option value="biannual">Every 6 months</option>
+          <option value="annual">Annual</option>
+        </select>
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Features & amenities</legend>
+
+      <div class="checkbox-grid">
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="parking" /> Parking
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="borehole" /> Borehole water
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="security" /> 24hr security
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="cctv" /> CCTV
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="lift" /> Lift
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="dsq" /> DSQ
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="garden" /> Garden
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="pool" /> Swimming pool
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="prepaid" /> Prepaid electricity
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="fibre" /> Fibre-ready
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="gym" /> Gym access
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="features" value="rooftop" /> Rooftop terrace
+        </label>
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Contact & payment details</legend>
+
+      <div class="form-group">
+        <label for="input-phone">WhatsApp number <span class="required-mark">*</span></label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">+254</span>
+          <input type="tel" id="input-phone" name="phone"
+            placeholder="712 345 678" maxlength="9" required />
+        </div>
+        <p class="field-hint">Viewing requests will be sent to this WhatsApp number.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="input-mpesa-number">
+          M-Pesa number for deposit escrow <span class="required-mark">*</span>
+        </label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">+254</span>
+          <input type="tel" id="input-mpesa-number" name="mpesa_number"
+            placeholder="712 345 678" maxlength="9" required />
+        </div>
+        <p class="field-hint">
+          Deposit funds are held in escrow and released to this number
+          after the tenant confirms move-in.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label for="input-mpesa-name">M-Pesa registered name</label>
+        <input type="text" id="input-mpesa-name" name="mpesa_name"
+          placeholder="Name as it appears on M-Pesa" />
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Description</legend>
+
+      <div class="form-group">
+        <label for="input-description">About this property</label>
+        <textarea id="input-description" name="description" rows="5"
+          placeholder="Describe the property — water schedule, neighbourhood feel, nearby landmarks...">
+        </textarea>
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Photos <span class="required-mark">* minimum 8</span></legend>
+
+      <div class="upload-area" id="upload-area">
+        <p class="upload-label">Drag and drop photos here</p>
+        <p class="upload-sub">or</p>
+        <label for="input-photos" class="upload-btn">Choose photos</label>
+        <input type="file" id="input-photos" name="photos"
+          accept="image/*" multiple style="display: none;" />
+      </div>
+
+      <div id="photo-preview-grid" class="photo-preview-grid"></div>
+      <p id="photo-count-msg" class="field-hint">0 of 8 required photos uploaded.</p>
+
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="button" id="btn-save-draft">Save draft</button>
+      <button type="submit" id="btn-submit-listing">Post listing</button>
+    </div>
+
+  </form>
+
+  <script src="nominatim.js"></script>
+  <script src="whatsapp.js"></script>
+  <script src="mpesa.js"></script>
+  <script src="listing-form.js"></script>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-logo">
+        <img src="images/kejani-logo.png" alt="KejaniFinds Logo">
+        <p>&copy; 2026 KejaniFinds. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="listings.html">Listings</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-contact">
+        <h3>Contact Us</h3>
+        <img src="icons/email-icon.svg" alt="Email Icon" class="contact-icon" href="mailto:info@kejanifinds.com">
+        <img src="icons/phone-icon.svg" alt="Phone Icon" class="contact-icon" href="tel:+254768943071">
+        <img src="icons/whatsapp-icon.svg" alt="WhatsApp Icon" class="contact-icon" href="https://wa.me/+254768943071">
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
