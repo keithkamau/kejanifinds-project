@@ -1,11 +1,11 @@
 // M-Pesa Daraja API
 const MPESA_CONFIG = {
-  consumerKey:      "YOUR_CONSUMER_KEY",
-  consumerSecret:   "YOUR_CONSUMER_SECRET",
-  shortCode:        "YOUR_PAYBILL_OR_TILL_NUMBER",
-  passkey:          "YOUR_MPESA_PASSKEY",
-  b2cInitiatorName: "YOUR_INITIATOR_NAME",
-  b2cSecurityCred:  "YOUR_ENCRYPTED_SECURITY_CRED",
+  consumerKey:      "2KG0ai7iesrfPN2hV0veTevU1SGpE5VFUJeBhcteZpKUz7e4",
+  consumerSecret:   "8VW6EGxzrGq8gjd2vgvqpNkHuuigDbiqJ75G99hf50wgAGoWMjoD1smjQHGUOTEL",
+  shortCode:        "N/A",
+  passkey:          "N/A",
+  b2cInitiatorName: "InitiatorName",
+  b2cSecurityCred:  "Safaricom123!!",
 
   stkCallbackUrl:  "https://api.kejafinds.co.ke/mpesa/stk-callback",
   b2cTimeoutUrl:   "https://api.kejafinds.co.ke/mpesa/b2c-timeout",
