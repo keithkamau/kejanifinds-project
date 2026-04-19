@@ -1,4 +1,4 @@
-// MPesa Daraja API
+// M-Pesa Daraja API
 const MPESA_CONFIG = {
   consumerKey:      "YOUR_CONSUMER_KEY",
   consumerSecret:   "YOUR_CONSUMER_SECRET",
@@ -7,9 +7,9 @@ const MPESA_CONFIG = {
   b2cInitiatorName: "YOUR_INITIATOR_NAME",
   b2cSecurityCred:  "YOUR_ENCRYPTED_SECURITY_CRED",
 
-  stkCallbackUrl:   "https://api.kejafinds.co.ke/mpesa/stk-callback",
-  b2cTimeoutUrl:    "https://api.kejafinds.co.ke/mpesa/b2c-timeout",
-  b2cResultUrl:     "https://api.kejafinds.co.ke/mpesa/b2c-result",
+  stkCallbackUrl:  "https://api.kejafinds.co.ke/mpesa/stk-callback",
+  b2cTimeoutUrl:   "https://api.kejafinds.co.ke/mpesa/b2c-timeout",
+  b2cResultUrl:    "https://api.kejafinds.co.ke/mpesa/b2c-result",
 
   environment: "sandbox",
 
@@ -26,11 +26,9 @@ async function getMpesaToken() {
   if (tokenCache.value && Date.now() < tokenCache.expiresAt) {
     return tokenCache.value;
   }
-
   const credentials = btoa(
     `${MPESA_CONFIG.consumerKey}:${MPESA_CONFIG.consumerSecret}`
   );
-
   const response = await fetch(
     `${MPESA_CONFIG.baseUrl}/oauth/v1/generate?grant_type=client_credentials`,
     {
@@ -40,16 +38,12 @@ async function getMpesaToken() {
       },
     }
   );
-
   const data = await response.json();
-
   if (!response.ok || !data.access_token) {
     throw new Error("Failed to get M-Pesa access token");
   }
-
   tokenCache.value     = data.access_token;
   tokenCache.expiresAt = Date.now() + 55 * 60 * 1000;
-
   return tokenCache.value;
 }
 
@@ -66,7 +60,6 @@ function getMpesaTimestamp() {
 
 async function initiateStkPush(depositDetails) {
   const { tenantPhone, amount, listingId, listingTitle } = depositDetails;
-
   const token     = await getMpesaToken();
   const timestamp = getMpesaTimestamp();
   const password  = generateStkPassword(timestamp);
@@ -83,7 +76,7 @@ async function initiateStkPush(depositDetails) {
     PhoneNumber:       phone,
     CallBackURL:       MPESA_CONFIG.stkCallbackUrl,
     AccountReference:  listingId,
-    TransactionDesc:   `KejaFinds deposit – ${listingTitle}`.slice(0, 13),
+    TransactionDesc:   `KejaniFinds deposit`.slice(0, 13),
   };
 
   const response = await fetch(
@@ -97,9 +90,7 @@ async function initiateStkPush(depositDetails) {
       body: JSON.stringify(payload),
     }
   );
-
   const data = await response.json();
-
   if (!response.ok || data.ResponseCode !== "0") {
     return {
       success:             false,
@@ -107,7 +98,6 @@ async function initiateStkPush(depositDetails) {
       responseDescription: data.ResponseDescription || "STK Push failed",
     };
   }
-
   return {
     success:             true,
     checkoutRequestId:   data.CheckoutRequestID,
@@ -138,9 +128,8 @@ async function queryStkStatus(checkoutRequestId) {
       }),
     }
   );
-
   const data = await response.json();
-  const code = data.ResultCode ?? data.errorCode;
+  const code = String(data.ResultCode ?? data.errorCode);
 
   let status;
   if      (code === "0")    status = "completed";
@@ -170,10 +159,8 @@ function pollPaymentStatus(checkoutRequestId, callbacks) {
 
   const interval = setInterval(async () => {
     attempts++;
-
     try {
       const result = await queryStkStatus(checkoutRequestId);
-
       if (result.status === "completed") {
         clearInterval(interval);
         onComplete(result);
@@ -192,7 +179,13 @@ function pollPaymentStatus(checkoutRequestId, callbacks) {
 }
 
 async function releaseEscrowToLandlord(payoutDetails) {
-  const { landlordPhone, amount, escrowRef, listingTitle, remarks = "KejaFinds deposit release" } = payoutDetails;
+  const {
+    landlordPhone,
+    amount,
+    escrowRef,
+    listingTitle,
+    remarks = "KejaniFinds deposit release",
+  } = payoutDetails;
 
   const token = await getMpesaToken();
   const phone = landlordPhone.replace(/^\+/, "").replace(/^0/, "254");
@@ -219,9 +212,7 @@ async function releaseEscrowToLandlord(payoutDetails) {
       }),
     }
   );
-
   const data = await response.json();
-
   if (!response.ok || data.ResponseCode !== "0") {
     return {
       success:             false,
@@ -229,7 +220,6 @@ async function releaseEscrowToLandlord(payoutDetails) {
       responseDescription: data.ResponseDescription || "B2C payout failed",
     };
   }
-
   return {
     success:             true,
     conversationId:      data.ConversationID,
@@ -239,45 +229,6 @@ async function releaseEscrowToLandlord(payoutDetails) {
   };
 }
 
-function handleStkCallback(req, res) {
-  const callback = req.body?.Body?.stkCallback;
-
-  if (!callback) {
-    return res.status(400).json({ ResultCode: 1, ResultDesc: "Bad request" });
-  }
-
-  const { MerchantRequestID, CheckoutRequestID, ResultCode, CallbackMetadata } = callback;
-
-  if (ResultCode === 0) {
-    const meta = CallbackMetadata?.Item || [];
-    const get  = key => meta.find(i => i.Name === key)?.Value;
-
-    const paymentRecord = {
-      merchantRequestId:  MerchantRequestID,
-      checkoutRequestId:  CheckoutRequestID,
-      mpesaReceiptNumber: get("MpesaReceiptNumber"),
-      amount:             get("Amount"),
-      phoneNumber:        get("PhoneNumber"),
-      transactionDate:    get("TransactionDate"),
-      status:             "paid",
-    };
-
-    console.log("[KejaFinds] Deposit paid:", paymentRecord);
-  }
-
-  res.json({ ResultCode: 0, ResultDesc: "Accepted" });
-}
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    getMpesaToken,
-    initiateStkPush,
-    queryStkStatus,
-    pollPaymentStatus,
-    releaseEscrowToLandlord,
-    handleStkCallback,
-  };
-}
 
 // WhatsApp Cloud API
 const WHATSAPP_CONFIG = {
@@ -288,16 +239,13 @@ const WHATSAPP_CONFIG = {
 };
 
 async function whatsappSend(to, payload) {
-  const url = `${WHATSAPP_CONFIG.baseUrl}/${WHATSAPP_CONFIG.apiVersion}`
-            + `/${WHATSAPP_CONFIG.phoneNumberId}/messages`;
-
+  const url = `${WHATSAPP_CONFIG.baseUrl}/${WHATSAPP_CONFIG.apiVersion}/${WHATSAPP_CONFIG.phoneNumberId}/messages`;
   const body = {
     messaging_product: "whatsapp",
     recipient_type:    "individual",
     to:                to.replace(/^\+/, ""),
     ...payload,
   };
-
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -306,31 +254,28 @@ async function whatsappSend(to, payload) {
     },
     body: JSON.stringify(body),
   });
-
   const data = await response.json();
-
   if (!response.ok) {
+    console.error("[KejaniFinds] WhatsApp send failed:", data);
     throw new Error(data.error?.message || "WhatsApp API error");
   }
-
   return data;
 }
 
 async function sendViewingRequest(landlordPhone, viewingDetails) {
   const { tenantName, tenantPhone, listingTitle, listingId, preferredDate } = viewingDetails;
-
   return whatsappSend(landlordPhone, {
     type: "text",
     text: {
       body:
-        `*KejaFinds — New Viewing Request*\n\n` +
+        `*KejaniFinds — New Viewing Request*\n\n` +
         `*Listing:* ${listingTitle}\n` +
         `*Listing ID:* ${listingId}\n\n` +
         `*Tenant:* ${tenantName}\n` +
         `*Phone:* +${tenantPhone}\n` +
         `*Preferred date:* ${preferredDate}\n\n` +
-        `Reply directly to this number to confirm or suggest a different time.\n` +
-        `*No viewing fees are charged through KejaFinds.*`,
+        `Reply directly to confirm or suggest a different time.\n` +
+        `*No viewing fees are charged through KejaniFinds.*`,
       preview_url: false,
     },
   });
@@ -341,12 +286,11 @@ async function sendViewingConfirmation(tenantPhone, confirmationDetails) {
     tenantName, listingTitle, confirmedDate,
     confirmedTime, address, landlordName, landlordPhone,
   } = confirmationDetails;
-
   return whatsappSend(tenantPhone, {
     type: "text",
     text: {
       body:
-        `*KejaFinds — Viewing Confirmed ✓*\n\n` +
+        `*KejaniFinds — Viewing Confirmed*\n\n` +
         `Hi ${tenantName}, your viewing has been confirmed.\n\n` +
         `*Property:* ${listingTitle}\n` +
         `*Date:* ${confirmedDate}\n` +
@@ -354,8 +298,7 @@ async function sendViewingConfirmation(tenantPhone, confirmationDetails) {
         `*Address:* ${address}\n\n` +
         `*Landlord:* ${landlordName}\n` +
         `*Direct contact:* +${landlordPhone}\n\n` +
-        `Reminder: No viewing fee should be charged. If asked to pay, ` +
-        `report it immediately via KejaFinds.`,
+        `Reminder: No viewing fee should be charged. If asked to pay, report it via KejaniFinds.`,
       preview_url: false,
     },
   });
@@ -366,16 +309,14 @@ async function sendDepositEscrowNotification(landlordPhone, escrowDetails) {
     landlordName, tenantName, listingTitle,
     depositAmount, moveInDate, escrowRef,
   } = escrowDetails;
-
   const formatted = depositAmount.toLocaleString("en-KE", {
     style: "currency", currency: "KES",
   });
-
   return whatsappSend(landlordPhone, {
     type: "text",
     text: {
       body:
-        `*KejaFinds — Deposit Secured in Escrow*\n\n` +
+        `*KejaniFinds — Deposit Secured in Escrow*\n\n` +
         `Hi ${landlordName},\n\n` +
         `*${tenantName}* has paid a deposit of *${formatted}* ` +
         `for your listing:\n*${listingTitle}*\n\n` +
@@ -383,7 +324,7 @@ async function sendDepositEscrowNotification(landlordPhone, escrowDetails) {
         `They will be released to your M-Pesa number automatically ` +
         `once the tenant confirms move-in on *${moveInDate}*.\n\n` +
         `*Escrow reference:* ${escrowRef}\n\n` +
-        `Questions? Contact KejaFinds support.`,
+        `Questions? Contact KejaniFinds support.`,
       preview_url: false,
     },
   });
@@ -394,29 +335,25 @@ async function sendEscrowReleaseAlert(recipientPhone, releaseDetails) {
     recipientName, role, listingTitle,
     depositAmount, escrowRef, releaseDate,
   } = releaseDetails;
-
   const formatted = depositAmount.toLocaleString("en-KE", {
     style: "currency", currency: "KES",
   });
-
   const landlordMsg =
-    `*KejaFinds — Escrow Released ✓*\n\n` +
+    `*KejaniFinds — Escrow Released*\n\n` +
     `Hi ${recipientName},\n\n` +
     `Your tenant has confirmed move-in for *${listingTitle}*.\n` +
     `*${formatted}* has been released from escrow to your M-Pesa.\n\n` +
     `*Reference:* ${escrowRef}\n` +
     `*Date:* ${releaseDate}\n\n` +
-    `Thank you for listing on KejaFinds.`;
-
+    `Thank you for listing on KejaniFinds.`;
   const tenantMsg =
-    `*KejaFinds — Move-In Confirmed ✓*\n\n` +
+    `*KejaniFinds — Move-In Confirmed*\n\n` +
     `Hi ${recipientName},\n\n` +
     `You have successfully moved into *${listingTitle}*.\n` +
     `Your deposit of *${formatted}* has been released to your landlord.\n\n` +
     `*Reference:* ${escrowRef}\n` +
     `*Date:* ${releaseDate}\n\n` +
-    `Please leave a review for your landlord on KejaFinds.`;
-
+    `Please leave a review for your landlord on KejaniFinds.`;
   return whatsappSend(recipientPhone, {
     type: "text",
     text: {
@@ -431,12 +368,11 @@ async function sendMaintenanceAlert(landlordPhone, requestDetails) {
     landlordName, tenantName, listingTitle,
     issueType, description, requestId, submittedAt,
   } = requestDetails;
-
   return whatsappSend(landlordPhone, {
     type: "text",
     text: {
       body:
-        `*KejaFinds — Maintenance Request*\n\n` +
+        `*KejaniFinds — Maintenance Request*\n\n` +
         `Hi ${landlordName},\n\n` +
         `*${tenantName}* has logged a maintenance request for:\n` +
         `*${listingTitle}*\n\n` +
@@ -444,27 +380,18 @@ async function sendMaintenanceAlert(landlordPhone, requestDetails) {
         `*Description:* ${description}\n` +
         `*Submitted:* ${submittedAt}\n` +
         `*Request ID:* ${requestId}\n\n` +
-        `Log in to KejaFinds to acknowledge and track this request.`,
+        `Log in to KejaniFinds to acknowledge and track this request.`,
       preview_url: false,
     },
   });
 }
 
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    sendViewingRequest,
-    sendViewingConfirmation,
-    sendDepositEscrowNotification,
-    sendEscrowReleaseAlert,
-    sendMaintenanceAlert,
-  };
-}
 
 // Nominatim API
 const NOMINATIM_CONFIG = {
-  baseUrl:     "https://nominatim.openstreetmap.org",
-  userAgent:   "KejaFinds/1.0 (contact@kejafinds.co.ke)",
-  rateLimit:   1000,
+  baseUrl:   "https://nominatim.openstreetmap.org",
+  userAgent: "KejaniFinds/1.0 (contact@kejanifinds.co.ke)",
+  rateLimit: 1000,
 };
 
 let lastRequestTime = 0;
@@ -473,35 +400,28 @@ let debounceTimer   = null;
 async function nominatimFetch(url) {
   const now     = Date.now();
   const elapsed = now - lastRequestTime;
-
   if (elapsed < NOMINATIM_CONFIG.rateLimit) {
     await new Promise(resolve =>
       setTimeout(resolve, NOMINATIM_CONFIG.rateLimit - elapsed)
     );
   }
-
   lastRequestTime = Date.now();
-
   const response = await fetch(url, {
     headers: {
       "User-Agent":      NOMINATIM_CONFIG.userAgent,
       "Accept-Language": "en",
     },
   });
-
   if (!response.ok) throw new Error(`Nominatim fetch failed: ${response.status}`);
   return response.json();
 }
 
 async function geocodeFromListingFields(listingFields) {
   const { street = "", estate = "", area = "", city = "Nairobi" } = listingFields;
-
   const parts = [street, estate, area, city, "Kenya"]
     .map(p => p.trim())
     .filter(Boolean);
-
   const query = parts.join(", ");
-
   if (!estate && !street) return null;
 
   const url = `${NOMINATIM_CONFIG.baseUrl}/search?` + new URLSearchParams({
@@ -514,37 +434,29 @@ async function geocodeFromListingFields(listingFields) {
 
   try {
     const data = await nominatimFetch(url);
-
     if (!data || data.length === 0) return null;
-
     const result = data[0];
-
     return {
       lat:            parseFloat(result.lat),
       lon:            parseFloat(result.lon),
       displayName:    result.display_name,
-      suburb:         result.address?.suburb
-                   || result.address?.neighbourhood
-                   || estate,
+      suburb:         result.address?.suburb || result.address?.neighbourhood || estate,
       county:         result.address?.county   || null,
       postcode:       result.address?.postcode  || null,
       formattedQuery: query,
     };
-
   } catch (error) {
-    console.error("[KejaFinds] geocodeFromListingFields failed:", error);
+    console.error("[KejaniFinds] geocodeFromListingFields failed:", error);
     return null;
   }
 }
 
 function autocompleteEstate(inputValue, onResults) {
   clearTimeout(debounceTimer);
-
   if (!inputValue || inputValue.trim().length < 3) {
     onResults([]);
     return;
   }
-
   debounceTimer = setTimeout(async () => {
     const url = `${NOMINATIM_CONFIG.baseUrl}/search?` + new URLSearchParams({
       q:              `${inputValue.trim()}, Nairobi, Kenya`,
@@ -553,10 +465,8 @@ function autocompleteEstate(inputValue, onResults) {
       limit:          5,
       countrycodes:   "ke",
     });
-
     try {
       const data = await nominatimFetch(url);
-
       const suggestions = data.map(item => ({
         label:      item.display_name,
         shortLabel: [
@@ -567,11 +477,9 @@ function autocompleteEstate(inputValue, onResults) {
         lat: parseFloat(item.lat),
         lon: parseFloat(item.lon),
       }));
-
       onResults(suggestions);
-
     } catch (error) {
-      console.error("[KejaFinds] autocompleteEstate failed:", error);
+      console.error("[KejaniFinds] autocompleteEstate failed:", error);
       onResults([]);
     }
   }, 600);
@@ -588,30 +496,29 @@ function attachLocationAutofill() {
   const hiddenLon       = document.getElementById("hidden-lon");
   const hiddenAddress   = document.getElementById("hidden-display-address");
 
+  if (!estateInput) return;
+
   estateInput.addEventListener("input", e => {
     autocompleteEstate(e.target.value, suggestions => {
       suggestionsList.innerHTML = "";
-
       suggestions.forEach(s => {
         const li = document.createElement("li");
-        li.textContent  = s.shortLabel;
-        li.style.cssText = "padding: 8px 12px; cursor: pointer; list-style: none;";
-
+        li.textContent = s.shortLabel;
         li.addEventListener("click", () => {
-          estateInput.value        = s.shortLabel.split(",")[0].trim();
+          estateInput.value         = s.shortLabel.split(",")[0].trim();
           suggestionsList.innerHTML = "";
-          hiddenLat.value          = s.lat;
-          hiddenLon.value          = s.lon;
-          hiddenAddress.value      = s.label;
-          locationPreview.textContent = `📍 ${s.label}`;
+          hiddenLat.value           = s.lat;
+          hiddenLon.value           = s.lon;
+          hiddenAddress.value       = s.label;
+          locationPreview.textContent = `${s.label}`;
         });
-
         suggestionsList.appendChild(li);
       });
     });
   });
 
   [streetInput, estateInput, areaInput, cityInput].forEach(input => {
+    if (!input) return;
     input.addEventListener("blur", async () => {
       const listingFields = {
         street: streetInput.value,
@@ -619,18 +526,14 @@ function attachLocationAutofill() {
         area:   areaInput.value,
         city:   cityInput.value || "Nairobi",
       };
-
       if (!listingFields.estate && !listingFields.street) return;
-
       locationPreview.textContent = "Locating...";
-
       const result = await geocodeFromListingFields(listingFields);
-
       if (result) {
         hiddenLat.value             = result.lat;
         hiddenLon.value             = result.lon;
         hiddenAddress.value         = result.displayName;
-        locationPreview.textContent = `📍 ${result.displayName}`;
+        locationPreview.textContent = result.displayName;
       } else {
         locationPreview.textContent = "Could not find this location — try being more specific.";
       }
@@ -638,12 +541,47 @@ function attachLocationAutofill() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", attachLocationAutofill);
+// Photo upload counter
+function attachPhotoUpload() {
+  const input        = document.getElementById("input-photos");
+  const previewGrid  = document.getElementById("photo-preview-grid");
+  const countMsg     = document.getElementById("photo-count-msg");
+  if (!input) return;
 
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    geocodeFromListingFields,
-    autocompleteEstate,
-    attachLocationAutofill,
-  };
+  input.addEventListener("change", () => {
+    const files = Array.from(input.files);
+    previewGrid.innerHTML = "";
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        previewGrid.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+    countMsg.textContent = `${files.length} of 8 required photos uploaded.`;
+  });
 }
+
+// Guard new-listing-form — redirect to login if not authenticated
+async function guardListingForm() {
+  try {
+    if (!window.auth0Client) return;
+    const isAuth = await window.auth0Client.isAuthenticated();
+    if (!isAuth) {
+      sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
+      window.location.href = 'login.html';
+    }
+  } catch (err) {
+    console.error('Auth guard failed:', err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  attachLocationAutofill();
+  attachPhotoUpload();
+  if (document.getElementById('listing-form')) {
+    guardListingForm();
+  }
+});
