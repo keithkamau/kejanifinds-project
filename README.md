@@ -42,10 +42,12 @@ KejaniFinds
 ## Prerequisites
 
 - A local HTTP server (e.g., `http-server`, Live Server, Python `http.server`).
-- Auth0 account (free tier).
+- Auth0 account (free tier). 
 - (Optional) Safaricom M‑Pesa Developer account for sandbox testing.
 - (Optional) Facebook Developer account for WhatsApp Cloud API.
 - Modern browser with JavaScript enabled.
+- Sample email: user@example.com
+- Sample password: User123!!
 
 ## Setup Instructions
 
