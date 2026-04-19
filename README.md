@@ -23,21 +23,21 @@ KejaniFinds is a web‑based property rental platform for Nairobi, Kenya. Landlo
 ## Project Structure
 
 KejaniFinds
-├── index.html # Homepage with hero and featured listings
-├── listings.html # All available listings
-├── saved-listings.html # Placeholder for saved listings
-├── login.html # Auth0 login / signup page
-├── new-listing-form.html # Multi‑section listing submission form
-├── callback.html # Optional – not required if login.html handles callback
-├── styles/
-│ ├── styles.css # Global styles (navbar, cards, footer)
-│ ├── form-style.css # Listing form specific styles
-│ └── login-styles.css # Login page styles
-├── images/ # Logo, property photos (house1.jpg – house6.jpg), city‑skyline.jpg
-├── icons/ # SVG icons (email, phone, whatsapp, verified, 24hr‑support, etc.)
-├── auth.js # Auth0 initialisation and authentication logic
-├── script.js # M‑Pesa, WhatsApp, Nominatim, and listing form logic
-└── README.md
+- index.html # Homepage with hero and featured listings
+- listings.html # All available listings
+- saved-listings.html # Placeholder for saved listings
+- login.html # Auth0 login / signup page
+- new-listing-form.html # Multi‑section listing submission form
+- callback.html # Optional – not required if login.html handles callback
+- styles/
+  - styles.css # Global styles (navbar, cards, footer)
+  - form-style.css # Listing form specific styles
+  - login-styles.css # Login page styles
+- images/ # Logo, property photos (house1.jpg – house6.jpg), city‑skyline.jpg
+- icons/ # SVG icons (email, phone, whatsapp, verified, 24hr‑support, etc.)
+- auth.js # Auth0 initialisation and authentication logic
+- script.js # M‑Pesa, WhatsApp, Nominatim, and listing form logic
+- README.md
 
 ## Prerequisites
 
