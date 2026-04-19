@@ -62,23 +62,22 @@ The application will be available at <http://localhost:3000>.
 
 ### 2.Configure Auth0 (mandatory)
 
-Log in to your Auth0 dashboard.
+1. Log in to your Auth0 dashboard.
 
-Create a Single Page Web Application.
+2. Create a Single Page Web Application.
 
-Note your Domain (e.g., dev-xxx.us.auth0.com) and Client ID.
+3. Note your Domain (e.g., dev-xxx.us.auth0.com) and Client ID.
 
-Under Application Settings, configure:
+4. Under Application Settings, configure:
 
-Allowed Callback URLs: <http://localhost:3000/login.html> (adjust port if needed)
+  - Allowed Callback URLs: <http://localhost:3000/login.html> (adjust port if needed)
 
-Allowed Logout URLs: <http://localhost:3000>
+  - Allowed Logout URLs: <http://localhost:3000>
 
-Allowed Web Origins: <http://localhost:3000>
+  - Allowed Web Origins: <http://localhost:3000>
 
-Save the changes.
-
-Open auth.js and replace the placeholder values:
+ 5. Save the changes.
+ 6. Open auth.js and replace the placeholder values:
 
 ```
 const AUTH0_CONFIG = {
@@ -118,11 +117,11 @@ const MPESA_CONFIG = {
 
 ### 4. (Optional) Configure WhatsApp Cloud API
 
-Create a Meta App and obtain a WhatsApp Business phone number.
+1. Create a Meta App and obtain a WhatsApp Business phone number.
 
-Get the Phone Number ID and Access Token.
+2. Get the Phone Number ID and Access Token.
 
-Update WHATSAPP_CONFIG in script.js:
+3. Update WHATSAPP_CONFIG in script.js:
 
 ```
 const WHATSAPP_CONFIG = {
@@ -138,9 +137,9 @@ Start your HTTP server as shown in step 1. Open http://localhost:3000/index.html
 
 ### Usage
 #### For tenants (browsing)
-Navigate to the homepage or listings.html to see example properties.
+- Navigate to the homepage or listings.html to see example properties.
 
-Use the search fields (estate, type, price) – currently no backend, so filtering does nothing.
+- Use the search fields (estate, type, price) – currently no backend, so filtering does nothing.
 
 #### For landlords (posting a listing)
 - Click Post a listing button (visible in the navbar on all pages).
@@ -161,76 +160,76 @@ Use the search fields (estate, type, price) – currently no backend, so filteri
 - Click Post listing – the form data will be logged to the browser console (no backend yet). A real implementation would send the data to a server.
 
 ### Authentication Flow (Auth0)
-auth.js initialises the Auth0 client using the SPA SDK.
+- auth.js initialises the Auth0 client using the SPA SDK.
 
-On login.html, the script checks for an existing session. If authenticated, it shows a welcome message and a logout button; otherwise, it shows Login and Signup buttons.
+- On login.html, the script checks for an existing session. If authenticated, it shows a welcome message and a logout button; otherwise, it shows Login and Signup buttons.
 
-Login / Signup redirects to Auth0 Universal Login.
+- Login / Signup redirects to Auth0 Universal Login.
 
-After successful authentication, Auth0 redirects back to login.html with code and state parameters. The callback is handled inside auth.js using handleRedirectCallback().
+- After successful authentication, Auth0 redirects back to login.html with code and state parameters. The callback is handled inside auth.js using handleRedirectCallback().
 
-The user’s profile and access token are stored in sessionStorage (kejani_user, kejani_token).
+- The user’s profile and access token are stored in sessionStorage (kejani_user, kejani_token).
 
-The "Post a listing" button on index.html and listings.html checks window.auth0Client.isAuthenticated() before allowing access. If not logged in, the user is sent to login.html with a redirect target stored.
+- The "Post a listing" button on index.html and listings.html checks window.auth0Client.isAuthenticated() before allowing access. If not logged in, the user is sent to login.html with a redirect target stored.
 
 ### Important Notes
-No backend: The current implementation is front‑end only. M‑Pesa, WhatsApp, and listing submission require a backend server to handle API secrets, callbacks, and data persistence.
+- No backend: The current implementation is front‑end only. M‑Pesa, WhatsApp, and listing submission require a backend server to handle API secrets, callbacks, and data persistence.
 
-M‑Pesa callbacks: The STK push callback URL must be publicly accessible. For local testing, use a tool like ngrok to expose your local server.
+- M‑Pesa callbacks: The STK push callback URL must be publicly accessible. For local testing, use a tool like ngrok to expose your local server.
 
-Nominatim rate limiting: The free Nominatim service allows 1 request per second. The code enforces a 1000 ms delay. For production, obtain a commercial geocoding API.
+- Nominatim rate limiting: The free Nominatim service allows 1 request per second. The code enforces a 1000 ms delay. For production, obtain a commercial geocoding API.
 
-Photo uploads: The form allows selecting multiple images, but they are not sent anywhere. A production system should upload them to cloud storage (e.g., AWS S3, Cloudinary).
+- Photo uploads: The form allows selecting multiple images, but they are not sent anywhere. A production system should upload them to cloud storage (e.g., AWS S3, Cloudinary).
 
-Static listings: All listings on index.html and listings.html are hardcoded examples. Replace with dynamic data from a database.
+- Static listings: All listings on index.html and listings.html are hardcoded examples. Replace with dynamic data from a database.
 
-Saved listings: saved-listings.html is a placeholder – no functionality implemented.
+- Saved listings: saved-listings.html is a placeholder – no functionality implemented.
 
 ### Troubleshooting
 #### Auth0 does not load / “Auth0 SDK not loaded”
-Make sure you are accessing the page via http:// and not file://.
+- Make sure you are accessing the page via http:// and not file://.
 
-Check the browser console for errors. Common issues:
+- Check the browser console for errors. Common issues:
 
-Incorrect callback URL in Auth0 dashboard (must exactly match http://localhost:3000/login.html).
+  - Incorrect callback URL in Auth0 dashboard (must exactly match http://localhost:3000/login.html).
 
-Network block – verify the CDN script URL is reachable: https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js.
+  - Network block – verify the CDN script URL is reachable: https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js.
 
-Confirm that you have set Allowed Web Origins to your local server address.
+- Confirm that you have set Allowed Web Origins to your local server address.
 
 #### Location autocomplete does not work
-The estate input field must have id="input-estate". It exists in new-listing-form.html.
+- The estate input field must have id="input-estate". It exists in new-listing-form.html.
 
-Ensure script.js is loaded and that the attachLocationAutofill() function runs after the DOM is ready (it does via DOMContentLoaded).
+- Ensure script.js is loaded and that the attachLocationAutofill() function runs after the DOM is ready (it does via DOMContentLoaded).
 
-Some browsers or extensions may block requests to nominatim.openstreetmap.org. Check the network tab.
+- Some browsers or extensions may block requests to nominatim.openstreetmap.org. Check the network tab.
 
 #### M‑Pesa STK push fails with “Invalid Consumer Key” or “Invalid Access Token”
-Use sandbox credentials only. Production credentials require a different endpoint and live shortcode.
+- Use sandbox credentials only. Production credentials require a different endpoint and live shortcode.
 
-The access token is obtained automatically by getMpesaToken(). If this fails, verify your consumer key/secret and that the environment is set to sandbox.
+- The access token is obtained automatically by getMpesaToken(). If this fails, verify your consumer key/secret and that the environment is set to sandbox.
 
-The callback URL must be HTTPS for production; for sandbox, HTTP may work but Safaricom recommends HTTPS.
+- The callback URL must be HTTPS for production; for sandbox, HTTP may work but Safaricom recommends HTTPS.
 
 #### WhatsApp messages are not sent
-The access token and phone number ID must be from a valid WhatsApp Business App with an approved phone number.
+- The access token and phone number ID must be from a valid WhatsApp Business App with an approved phone number.
 
-The recipient phone number must be opted in (have sent a message to the business first, or use a test number in sandbox mode).
+- The recipient phone number must be opted in (have sent a message to the business first, or use a test number in sandbox mode).
 
 ### Future Improvements
-Backend API (Node.js + Express) to handle:
-- User roles (tenant / landlord / admin).
-- Listing CRUD operations with database (PostgreSQL / MongoDB).
-- Secure storage of M‑Pesa and WhatsApp credentials.
-- Actual STK push callback handling and escrow ledger.
-- Image upload to cloud storage.
+- Backend API (Node.js + Express) to handle:
+  - User roles (tenant / landlord / admin).
+  - Listing CRUD operations with database (PostgreSQL / MongoDB).
+  - Secure storage of M‑Pesa and WhatsApp credentials.
+  - Actual STK push callback handling and escrow ledger.
+  - Image upload to cloud storage.
 
-Real search and filtering with server‑side pagination.
+- Real search and filtering with server‑side pagination.
 
-Map view for listings.
+- Map view for listings.
 
-Tenant‑landlord chat system.
+- Tenant‑landlord chat system.
 
-Admin verification dashboard.
+- Admin verification dashboard.
 
 Automated deposit release after tenant confirmation.
