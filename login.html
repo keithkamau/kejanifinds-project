@@ -9,103 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/styles.css">
-  <style>
-    /* Additional login page specific styles */
-    .login-container {
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #F8F9FA 0%, #e9ecef 100%);
-      padding: 2rem;
-    }
-    .login-card {
-      background: white;
-      max-width: 480px;
-      width: 100%;
-      padding: 2.5rem;
-      border-radius: 20px;
-      box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
-      text-align: center;
-      border: 1px solid #E9C46A;
-    }
-    .login-card h1 {
-      font-family: 'Playfair', serif;
-      font-size: 2.2rem;
-      color: #1A2A4F;
-      margin-bottom: 0.5rem;
-    }
-    .login-subtitle {
-      font-family: 'Inter', sans-serif;
-      color: #5B8FB9;
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-    }
-    .login-auth0-btn {
-      background-color: #1A2A4F;
-      color: white;
-      border: none;
-      padding: 0.9rem 1.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 40px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      transition: all 0.2s ease;
-      font-family: 'Inter', sans-serif;
-      margin-bottom: 1rem;
-    }
-    .login-auth0-btn:hover {
-      background-color: #2c3e6e;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(26,42,79,0.2);
-    }
-    .login-error {
-      background-color: #f8d7da;
-      color: #721c24;
-      padding: 10px;
-      border-radius: 8px;
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .hidden {
-      display: none;
-    }
-    .login-footer {
-      margin-top: 2rem;
-      font-size: 0.85rem;
-      font-family: 'Inter', sans-serif;
-    }
-    .login-footer a {
-      color: #D4A44B;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .login-footer a:hover {
-      text-decoration: underline;
-    }
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #f3f3f3;
-      border-top: 2px solid #D4A44B;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 8px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+  <link rel="stylesheet" href="styles/login-styles.css">
 </head>
 <body>
+
   <nav class="navbar">
     <div class="navbar-container">
       <div class="logo-container">
@@ -124,33 +31,31 @@
 
   <main class="login-container">
     <div class="login-card">
-      <!-- Loading view -->
+
       <div id="view-loading">
         <div class="loading-spinner"></div>
         <p>Loading authentication...</p>
       </div>
 
-      <!-- Error view -->
       <div id="view-error" class="login-error hidden"></div>
 
-      <!-- Authenticated view (user already logged in) -->
       <div id="view-authenticated" class="hidden">
         <h1>Welcome back!</h1>
         <p>You are already logged in as <strong id="user-email"></strong></p>
-        <button id="btn-logout" class="login-auth0-btn" style="background-color: #6c757d;">Logout</button>
-        <button id="btn-go-to-listing" class="login-auth0-btn" style="background-color: #D4A44B; color:#1A2A4F;">Post a listing</button>
+        <button id="btn-logout" class="login-auth0-btn">Logout</button>
+        <button id="btn-go-to-listing" class="login-go-to-listing-btn">Post a listing</button>
       </div>
 
-      <!-- Unauthenticated view -->
       <div id="view-unauthenticated" class="hidden">
         <h1>Welcome back</h1>
         <p class="login-subtitle">Sign in to access your account and manage listings</p>
         <button id="btn-login" class="login-auth0-btn">Login</button>
-        <button id="btn-signup" class="login-auth0-btn" style="background-color: #D4A44B; color:#1A2A4F;">Sign up</button>
+        <button id="btn-signup" class="login-auth0-btn login-signup-btn">Sign up</button>
         <div class="login-footer">
           <p>New to KejaniFinds? <a href="#" id="signup-link">Create an account</a></p>
         </div>
       </div>
+
     </div>
   </main>
 
@@ -171,142 +76,13 @@
         <h3>Contact Us</h3>
         <a href="mailto:info@kejanifinds.com"><img src="icons/email-icon.svg" alt="Email Icon" class="contact-icon"></a>
         <a href="tel:+254768943071"><img src="icons/phone-icon.svg" alt="Phone Icon" class="contact-icon"></a>
-        <a href="https://wa.me/+254768943071"><img src="icons/whatsapp-icon.svg" alt="WhatsApp Icon" class="contact-icon"></a>
+        <a href="https://wa.me/254768943071"><img src="icons/whatsapp-icon.svg" alt="WhatsApp Icon" class="contact-icon"></a>
       </div>
     </div>
   </footer>
 
-  <!-- Auth0 SDK -->
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js"></script>
+  <script src="auth.js"></script>
 
-  <script>
-    // Helper functions
-    const displayView = (name) => {
-      const loadingDiv = document.getElementById('view-loading');
-      const errorDiv = document.getElementById('view-error');
-      const authDiv = document.getElementById('view-authenticated');
-      const unauthDiv = document.getElementById('view-unauthenticated');
-      if (loadingDiv) loadingDiv.hidden = name !== 'loading';
-      if (errorDiv) errorDiv.hidden = name !== 'error';
-      if (authDiv) authDiv.hidden = name !== 'authenticated';
-      if (unauthDiv) unauthDiv.hidden = name !== 'unauthenticated';
-    };
-
-    const setTextContent = (id, content) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = content;
-    };
-
-    // Store the redirect target after login
-    let redirectAfterLogin = 'new-listing-form.html';
-
-    (async () => {
-      // Initialize Auth0 client
-      const client = await auth0.createAuth0Client({
-        domain: 'dev-uiz6yvagbhljjd7v.us.auth0.com',
-        clientId: 'CTfLuGG2XLuSHaumSrADumGFXy3i3LS5',
-        authorizationParams: {
-          redirect_uri: window.location.origin + '/login.html',
-        },
-      });
-
-      window.auth0Client = client; // make it global for logout
-
-      // Check for error in URL
-      if (location.search.includes('error=')) {
-        const params = new URLSearchParams(location.search);
-        const errorMsg = `Error: ${params.get('error')} — ${params.get('error_description')}`;
-        setTextContent('view-error', errorMsg);
-        displayView('error');
-        history.replaceState({}, '', location.pathname);
-        return;
-      }
-
-      // Handle redirect callback after login
-      if (location.search.includes('code=') && location.search.includes('state=')) {
-        displayView('loading');
-        try {
-          await client.handleRedirectCallback();
-          history.replaceState({}, '', location.pathname);
-        } catch (err) {
-          console.error('Callback error', err);
-          setTextContent('view-error', 'Login failed. Please try again.');
-          displayView('error');
-          return;
-        }
-      }
-
-      // Check authentication state
-      const isAuthenticated = await client.isAuthenticated();
-
-      if (isAuthenticated) {
-        const user = await client.getUser();
-        setTextContent('user-email', user.email || user.name || 'User');
-        displayView('authenticated');
-
-        // Store user info globally for other pages
-        sessionStorage.setItem('kejani_user', JSON.stringify(user));
-        sessionStorage.setItem('kejani_token', await client.getTokenSilently());
-
-        // Handle buttons on authenticated view
-        const logoutBtn = document.getElementById('btn-logout');
-        if (logoutBtn) {
-          logoutBtn.onclick = () => {
-            client.logout({ logoutParams: { returnTo: window.location.origin } });
-          };
-        }
-        const goToListingBtn = document.getElementById('btn-go-to-listing');
-        if (goToListingBtn) {
-          goToListingBtn.onclick = () => {
-            window.location.href = 'new-listing-form.html';
-          };
-        }
-        return;
-      }
-
-      // Not authenticated – show login/signup buttons
-      displayView('unauthenticated');
-
-      const loginBtn = document.getElementById('btn-login');
-      const signupBtn = document.getElementById('btn-signup');
-      const signupLink = document.getElementById('signup-link');
-
-      if (loginBtn) {
-        loginBtn.onclick = () => client.loginWithRedirect();
-      }
-      if (signupBtn) {
-        signupBtn.onclick = () => client.loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } });
-      }
-      if (signupLink) {
-        signupLink.onclick = (e) => {
-          e.preventDefault();
-          client.loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } });
-        };
-      }
-    })();
-  </script>
-
-  <!-- Post listing button from navbar - also protect -->
-  <script>
-    const postBtn = document.getElementById('postListingBtn');
-    if (postBtn) {
-      postBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        // Wait for auth0 client to be ready
-        if (window.auth0Client) {
-          const isAuth = await window.auth0Client.isAuthenticated();
-          if (isAuth) {
-            window.location.href = 'new-listing-form.html';
-          } else {
-            sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
-            window.location.href = 'login.html';
-          }
-        } else {
-          // fallback
-          window.location.href = 'login.html';
-        }
-      });
-    }
-  </script>
 </body>
 </html>

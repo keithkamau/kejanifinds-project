@@ -13,6 +13,26 @@
   <title>Home - KejaniFinds</title>
 </head>
 <body>
+  // Protect "Post a listing" button – redirect to login if not authenticated
+  <script src="auth.js"></script>
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js"></script>
+  <script>
+    (async function() {
+      if (!window.auth0Client) {
+        const client = await auth0.createAuth0Client({
+          domain: 'dev-uiz6yvagbhljjd7v.us.auth0.com',
+          clientId: 'CTfLuGG2XLuSHaumSrADumGFXy3i3LS5',
+          authorizationParams: { redirect_uri: window.location.origin + '/login.html' }
+        });
+        window.auth0Client = client;
+      }
+      const isAuth = await window.auth0Client.isAuthenticated();
+      if (!isAuth) {
+        sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
   <nav class="navbar">
     <div class="navbar-container">
       <div class="logo-container">
@@ -24,7 +44,7 @@
         <li><a href="listings.html">Listings</a></li>
         <li><a href="saved-listings.html">My Saved</a></li>
       </ul>
-      <a href="login.html" class="post-listing-button">Post a listing</a>
+      <a href="#" id="postListingBtn" class="post-listing-button">Post a listing</a>
     </div>
   </nav>
   <header class="hero">

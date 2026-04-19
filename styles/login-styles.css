@@ -1,0 +1,133 @@
+.login-container {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #F8F9FA 0%, #e9ecef 100%);
+  padding: 2rem;
+}
+
+.login-card {
+  background: white;
+  max-width: 480px;
+  width: 100%;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+  text-align: center;
+  border: 1px solid #E9C46A;
+}
+
+.login-card h1 {
+  font-family: 'Playfair', serif;
+  font-size: 2.2rem;
+  color: #1A2A4F;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #5B8FB9;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.login-auth0-btn {
+  background-color: #1A2A4F;
+  color: white;
+  border: none;
+  padding: 0.9rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 40px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 1rem;
+}
+
+.login-signup-btn {
+  background-color: #D4A44B;
+  color: #1A2A4F;
+}
+
+.login-auth0-btn:hover,
+.login-go-to-listing-btn:hover {
+  background-color: #2c3e6e;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26,42,79,0.2);
+}
+
+.login-signup-btn:hover {
+  background-color: #E9C46A;
+}
+
+.login-go-to-listing-btn {
+  background-color: #D4A44B;
+  color: #1A2A4F;
+  border: none;
+  padding: 0.9rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 40px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 1rem;
+}
+
+.login-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.login-footer {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-footer a {
+  color: #D4A44B;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #D4A44B;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
