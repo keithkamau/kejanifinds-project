@@ -35,6 +35,36 @@
     </div>
   </nav>
 
+  <!-- Authentication for login section to redirect till login is successful -->
+  <script>
+  (async function protectPage() {
+    // Wait for Auth0 SDK to load (if not already)
+    if (typeof auth0 === 'undefined') {
+      await new Promise(resolve => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js';
+        script.onload = resolve;
+        document.head.appendChild(script);
+      });
+    }
+    const client = await auth0.createAuth0Client({
+      domain: 'dev-uiz6yvagbhljjd7v.us.auth0.com',
+      clientId: 'CTfLuGG2XLuSHaumSrADumGFXy3i3LS5',
+      authorizationParams: { redirect_uri: window.location.origin + '/login.html' }
+    });
+    const isAuth = await client.isAuthenticated();
+    if (!isAuth) {
+      sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
+      window.location.href = 'login.html';
+    } else {
+      // Store user info for later use
+      const user = await client.getUser();
+      sessionStorage.setItem('kejani_user', JSON.stringify(user));
+      sessionStorage.setItem('kejani_token', await client.getTokenSilently());
+    }
+  })();
+  </script>
+
   <div class="form-heading">
     <h3>Post a listing</h3>
     <p>Fill in your property details — takes about 5 minutes</p>
