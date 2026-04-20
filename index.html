@@ -21,6 +21,7 @@
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
           <li><a href="listings.html">Listings</a></li>
+          <li><a href="saved-listings.html">My Saved</a></li>
         </ul>
         <a href="#" id="postListingBtn" class="post-listing-button">Post a listing</a>
       </div>
@@ -178,34 +179,65 @@
 
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async function () {
-      const postBtn = document.getElementById('postListingBtn');
-      if (!postBtn) return;
-      postBtn.addEventListener('click', async function (e) {
-        e.preventDefault();
-        try {
-          if (!window.auth0Client) {
-            window.auth0Client = await window.auth0.createAuth0Client({
-              domain: 'dev-uiz6yvagbhljjd7v.us.auth0.com',
-              clientId: 'CTfLuGG2XLuSHaumSrADumGFXy3i3LS5',
-              authorizationParams: { redirect_uri: window.location.origin + '/login.html' },
-              cacheLocation: 'localstorage',
-              useRefreshTokens: true,
-            });
-          }
-          const isAuth = await window.auth0Client.isAuthenticated();
-          if (isAuth) {
-            window.location.href = 'new-listing-form.html';
-          } else {
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // --- Search button ---
+      var searchBtn  = document.getElementById('search-button');
+      var estateInput = document.getElementById('estate');
+      var sizeSelect  = document.getElementById('rental-size');
+      var priceSelect = document.getElementById('rental-price');
+
+      function runSearch() {
+        var params = new URLSearchParams();
+        var estate = estateInput.value.trim();
+        var size   = sizeSelect.value;
+        var price  = priceSelect.value;
+        if (estate) params.set('estate', estate);
+        if (size)   params.set('type',   size);
+        if (price)  params.set('price',  price);
+        var query = params.toString();
+        window.location.href = 'listings.html' + (query ? '?' + query : '');
+      }
+
+      searchBtn.addEventListener('click', runSearch);
+
+      // Allow pressing Enter in the estate text field to trigger search
+      estateInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') runSearch();
+      });
+
+      // --- Post a listing auth guard ---
+      var postBtn = document.getElementById('postListingBtn');
+      if (postBtn) {
+        postBtn.addEventListener('click', async function (e) {
+          e.preventDefault();
+          try {
+            if (!window.auth0Client) {
+              window.auth0Client = await window.auth0.createAuth0Client({
+                domain:      'dev-uiz6yvagbhljjd7v.us.auth0.com',
+                clientId:    'CTfLuGG2XLuSHaumSrADumGFXy3i3LS5',
+                authorizationParams: {
+                  redirect_uri: 'https://keithkamau.github.io/kejanifinds-project/login.html',
+                },
+                cacheLocation:    'localstorage',
+                useRefreshTokens: true,
+              });
+            }
+            var isAuth = await window.auth0Client.isAuthenticated();
+            if (isAuth) {
+              window.location.href = 'new-listing-form.html';
+            } else {
+              sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
+              window.location.href = 'login.html';
+            }
+          } catch (err) {
+            console.error('Auth check failed:', err);
             sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
             window.location.href = 'login.html';
           }
-        } catch (err) {
-          console.error('Auth check failed:', err);
-          sessionStorage.setItem('auth_redirect', 'new-listing-form.html');
-          window.location.href = 'login.html';
-        }
-      });
+        });
+      }
+
     });
   </script>
 

@@ -440,3 +440,69 @@
 .contact-icon:hover {
   transform: scale(1.1);
 }
+
+.listings-search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 1.5rem 6rem 0;
+}
+
+.listings-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.5rem 6rem 0;
+}
+
+.listings-header h2 {
+  font-family: 'Playfair', serif;
+  font-size: 3rem;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.results-summary {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #5B8FB9;
+  font-weight: 500;
+}
+
+.no-results {
+  padding: 2rem 6rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #2C3E50;
+}
+
+.no-results a {
+  color: #D4A44B;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.no-results a:hover {
+  text-decoration: underline;
+}
+
+.no-results.hidden {
+  display: none;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  background-color: transparent;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+}
+
+.clear-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
