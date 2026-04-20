@@ -59,6 +59,7 @@
   <section class="featured-finds">
     <h2>Featured Finds</h2>
     <div class="finds-grid">
+
       <div class="find-card">
         <div class="find-img-container">
           <img src="images/house1.jpg" alt="Modern Apartment">
@@ -78,7 +79,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">James Maina</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-001" class="view-button">View Details</a>
       </div>
 
       <div class="find-card">
@@ -100,7 +101,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">Phillip Otieno</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-002" class="view-button">View Details</a>
       </div>
 
       <div class="find-card">
@@ -122,8 +123,9 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">James Maina</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-003" class="view-button">View Details</a>
       </div>
+
     </div>
     <a href="listings.html" class="view-all-button">View All Listings</a>
   </section>
@@ -180,8 +182,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-      // --- Search button ---
-      var searchBtn  = document.getElementById('search-button');
+      var searchBtn   = document.getElementById('search-button');
       var estateInput = document.getElementById('estate');
       var sizeSelect  = document.getElementById('rental-size');
       var priceSelect = document.getElementById('rental-price');
@@ -200,12 +201,10 @@
 
       searchBtn.addEventListener('click', runSearch);
 
-      // Allow pressing Enter in the estate text field to trigger search
       estateInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') runSearch();
       });
 
-      // --- Post a listing auth guard ---
       var postBtn = document.getElementById('postListingBtn');
       if (postBtn) {
         postBtn.addEventListener('click', async function (e) {

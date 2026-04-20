@@ -29,7 +29,6 @@
 
   <section class="available-listings">
 
-    <!-- Inline search bar so users can refine from the listings page itself -->
     <div class="listings-search-bar">
       <input  class="search-field" id="ls-estate" placeholder="Search by estate...">
       <select class="rental-type"  id="ls-type">
@@ -53,13 +52,11 @@
       <button class="clear-btn"  id="ls-clear-btn">Clear</button>
     </div>
 
-    <!-- Results summary -->
     <div class="listings-header">
       <h2>Available Finds</h2>
       <p class="results-summary" id="results-summary"></p>
     </div>
 
-    <!-- No-results message (hidden by default) -->
     <div class="no-results hidden" id="no-results">
       <p>No listings match your search. <a href="listings.html">Clear filters</a> to see all properties.</p>
     </div>
@@ -88,7 +85,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">James Maina</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-001" class="view-button">View Details</a>
       </div>
 
       <div class="find-card"
@@ -113,7 +110,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">Phillip Otieno</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-002" class="view-button">View Details</a>
       </div>
 
       <div class="find-card"
@@ -138,7 +135,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">James Maina</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-003" class="view-button">View Details</a>
       </div>
 
       <div class="find-card"
@@ -163,7 +160,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">Sarah Wairimu</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-004" class="view-button">View Details</a>
       </div>
 
       <div class="find-card"
@@ -188,7 +185,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">Phillip Otieno</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-005" class="view-button">View Details</a>
       </div>
 
       <div class="find-card"
@@ -213,7 +210,7 @@
           <img src="https://www.svgrepo.com/show/415616/basic-profile-ui.svg" alt="Image of Agent" class="agent-profile-img">
           <p class="agent-name">Eric Karanja</p>
         </div>
-        <a href="#" class="view-button">View Details</a>
+        <a href="listing.html?id=house-006" class="view-button">View Details</a>
       </div>
 
     </div>
@@ -253,29 +250,20 @@
       var typeEl     = document.getElementById('ls-type');
       var priceEl    = document.getElementById('ls-price');
 
-      // Price bucket mapping — maps the dropdown value to a max price
-      // "900001" means "over 90,000" so we treat it as Infinity
       function priceMatches(cardPrice, selectedBucket) {
         if (!selectedBucket) return true;
         var price  = parseInt(cardPrice, 10);
-        var bucket = parseInt(selectedBucket, 10);
         if (selectedBucket === '900001') return price > 90000;
-        return price <= bucket;
+        return price <= parseInt(selectedBucket, 10);
       }
 
       function applyFilters(estate, type, price) {
         var estateQuery = estate ? estate.toLowerCase().trim() : '';
         var visible = 0;
-
         cards.forEach(function (card) {
-          var cardEstate = (card.dataset.estate || '').toLowerCase();
-          var cardType   = card.dataset.type   || '';
-          var cardPrice  = card.dataset.price  || '0';
-
-          var matchEstate = !estateQuery || cardEstate.includes(estateQuery);
-          var matchType   = !type        || cardType === type;
-          var matchPrice  = priceMatches(cardPrice, price);
-
+          var matchEstate = !estateQuery || (card.dataset.estate || '').toLowerCase().includes(estateQuery);
+          var matchType   = !type        || card.dataset.type === type;
+          var matchPrice  = priceMatches(card.dataset.price || '0', price);
           if (matchEstate && matchType && matchPrice) {
             card.style.display = '';
             visible++;
@@ -283,59 +271,43 @@
             card.style.display = 'none';
           }
         });
-
-        // Update summary line
-        if (estateQuery || type || price) {
-          summary.textContent = visible + ' listing' + (visible !== 1 ? 's' : '') + ' found';
-        } else {
-          summary.textContent = '';
-        }
-
-        // Show/hide no-results message
+        summary.textContent = (estateQuery || type || price)
+          ? visible + ' listing' + (visible !== 1 ? 's' : '') + ' found'
+          : '';
         noResults.classList.toggle('hidden', visible > 0);
         grid.style.display = visible > 0 ? '' : 'none';
       }
 
       function readParamsAndFilter() {
-        var params  = new URLSearchParams(window.location.search);
-        var estate  = params.get('estate') || '';
-        var type    = params.get('type')   || '';
-        var price   = params.get('price')  || '';
-
-        // Pre-fill the on-page search bar with whatever came from the homepage
+        var params = new URLSearchParams(window.location.search);
+        var estate = params.get('estate') || '';
+        var type   = params.get('type')   || '';
+        var price  = params.get('price')  || '';
         if (estate) estateEl.value = estate;
         if (type)   typeEl.value   = type;
         if (price)  priceEl.value  = price;
-
         applyFilters(estate, type, price);
       }
 
-      // Run filter immediately on page load using URL params
       readParamsAndFilter();
 
-      // In-page search button
       document.getElementById('ls-search-btn').addEventListener('click', function () {
         var estate = estateEl.value;
         var type   = typeEl.value;
         var price  = priceEl.value;
-
-        // Update URL so the result is bookmarkable / shareable
         var params = new URLSearchParams();
         if (estate) params.set('estate', estate);
         if (type)   params.set('type',   type);
         if (price)  params.set('price',  price);
         var query = params.toString();
         history.replaceState({}, '', 'listings.html' + (query ? '?' + query : ''));
-
         applyFilters(estate, type, price);
       });
 
-      // Allow Enter key in estate field on listings page
       estateEl.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') document.getElementById('ls-search-btn').click();
       });
 
-      // Clear button — resets everything
       document.getElementById('ls-clear-btn').addEventListener('click', function () {
         estateEl.value = '';
         typeEl.value   = '';
@@ -344,7 +316,6 @@
         applyFilters('', '', '');
       });
 
-      // --- Post a listing auth guard ---
       var postBtn = document.getElementById('postListingBtn');
       if (postBtn) {
         postBtn.addEventListener('click', async function (e) {
