@@ -211,6 +211,18 @@
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js"></script>
   <script src="listing-data.js"></script>
   <script src="listing.js"></script>
-
+  <script>
+  setTimeout(function() {
+    var loader = document.getElementById('listing-loading');
+    if (loader && !loader.classList.contains('hidden')) {
+      console.error("DEBUG: Loader still visible after 2 seconds – checking data...");
+      if (typeof LISTINGS_DATA === 'undefined') {
+        loader.innerHTML = '<div style="color:red; padding:20px;">Error: listing-data.js not loaded. Check file path and console.</div>';
+      } else {
+        loader.innerHTML = '<div style="color:red; padding:20px;">Error: listing.js failed to run. Check console for JS errors.</div>';
+      }
+    }
+  }, 2000);
+  </script>
 </body>
 </html>
