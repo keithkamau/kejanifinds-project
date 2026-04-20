@@ -1,7 +1,7 @@
 const AUTH0_CONFIG = {
   domain:      'dev-uiz6yvagbhljjd7v.us.auth0.com',
   clientId:    'CTfLuGG2XLuSHaumSrADumGFXy3i3LS5',
-  redirectUri: window.location.origin + '/login.html',
+  redirectUri: 'https://keithkamau.github.io/kejanifinds-project/login.html',
 };
 
 let auth0Client = null;
