@@ -28,7 +28,6 @@ KejaniFinds
 - saved-listings.html # Placeholder for saved listings
 - login.html # Auth0 login / signup page
 - new-listing-form.html # Multi‑section listing submission form
-- callback.html # Optional – not required if login.html handles callback
 - styles/
   - styles.css # Global styles (navbar, cards, footer)
   - form-style.css # Listing form specific styles
@@ -186,37 +185,6 @@ Start your HTTP server as shown in step 1. Open http://localhost:3000/index.html
 - Static listings: All listings on index.html and listings.html are hardcoded examples. Replace with dynamic data from a database.
 
 - Saved listings: saved-listings.html is a placeholder – no functionality implemented.
-
-### Troubleshooting
-#### Auth0 does not load / “Auth0 SDK not loaded”
-- Make sure you are accessing the page via http:// and not file://.
-
-- Check the browser console for errors. Common issues:
-
-  - Incorrect callback URL in Auth0 dashboard (must exactly match http://localhost:3000/login.html).
-
-  - Network block – verify the CDN script URL is reachable: https://cdn.auth0.com/js/auth0-spa-js/2.18/auth0-spa-js.production.js.
-
-- Confirm that you have set Allowed Web Origins to your local server address.
-
-#### Location autocomplete does not work
-- The estate input field must have id="input-estate". It exists in new-listing-form.html.
-
-- Ensure script.js is loaded and that the attachLocationAutofill() function runs after the DOM is ready (it does via DOMContentLoaded).
-
-- Some browsers or extensions may block requests to nominatim.openstreetmap.org. Check the network tab.
-
-#### M‑Pesa STK push fails with “Invalid Consumer Key” or “Invalid Access Token”
-- Use sandbox credentials only. Production credentials require a different endpoint and live shortcode.
-
-- The access token is obtained automatically by getMpesaToken(). If this fails, verify your consumer key/secret and that the environment is set to sandbox.
-
-- The callback URL must be HTTPS for production; for sandbox, HTTP may work but Safaricom recommends HTTPS.
-
-#### WhatsApp messages are not sent
-- The access token and phone number ID must be from a valid WhatsApp Business App with an approved phone number.
-
-- The recipient phone number must be opted in (have sent a message to the business first, or use a test number in sandbox mode).
 
 ### Future Improvements
 - Backend API (Node.js + Express) to handle:
